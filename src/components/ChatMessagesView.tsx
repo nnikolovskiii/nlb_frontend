@@ -8,10 +8,6 @@ import { useState, ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import {
-  ActivityTimeline,
-  ProcessedEvent,
-} from "@/components/ActivityTimeline"; // Assuming ActivityTimeline is in the same dir or adjust path
 
 // Markdown component props type from former ReportView
 type MdComponentProps = {
@@ -146,14 +142,18 @@ const HumanMessageBubble: React.FC<HumanMessageBubbleProps> = ({
   mdComponents,
 }) => {
   return (
-    <div
-      className={`text-white rounded-3xl break-words min-h-7 bg-neutral-700 max-w-[95%] sm:max-w-[90%] px-3 sm:px-4 pt-3 rounded-br-lg`}
-    >
-      <ReactMarkdown components={mdComponents}>
-        {typeof message.content === "string"
-          ? message.content
-          : JSON.stringify(message.content)}
-      </ReactMarkdown>
+    <div className="flex flex-col items-end max-w-full sm:max-w-2xl">
+      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+        <span className="font-bold text-xs sm:text-sm text-gray-800">Јас</span>
+        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-600 rounded-full flex items-center justify-center text-white text-xs font-bold">Y</div>
+      </div>
+      <div className="bg-[rgba(40,0,123,0.8)] text-white p-2 sm:p-3 rounded-2xl border border-purple-900 text-sm sm:text-base">
+        <ReactMarkdown components={mdComponents}>
+          {typeof message.content === "string"
+            ? message.content
+            : JSON.stringify(message.content)}
+        </ReactMarkdown>
+      </div>
     </div>
   );
 };
@@ -161,8 +161,6 @@ const HumanMessageBubble: React.FC<HumanMessageBubbleProps> = ({
 // Props for AiMessageBubble
 interface AiMessageBubbleProps {
   message: Message;
-  historicalActivity: ProcessedEvent[] | undefined;
-  liveActivity: ProcessedEvent[] | undefined;
   isLastMessage: boolean;
   isOverallLoading: boolean;
   mdComponents: typeof mdComponents;
@@ -173,49 +171,68 @@ interface AiMessageBubbleProps {
 // AiMessageBubble Component
 const AiMessageBubble: React.FC<AiMessageBubbleProps> = ({
   message,
-  historicalActivity,
-  liveActivity,
   isLastMessage,
   isOverallLoading,
   mdComponents,
   handleCopy,
   copiedMessageId,
 }) => {
-  // Determine which activity events to show and if it's for a live loading message
-  const activityForThisBubble =
-    isLastMessage && isOverallLoading ? liveActivity : historicalActivity;
-  const isLiveActivityForThisBubble = isLastMessage && isOverallLoading;
+
+  // SVG Icons for the message actions
+  const ThumbsUpIcon = () => (
+    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-6.14A2 2 0 0016.28 8H14z"></path>
+    </svg>
+  );
+
+  const ThumbsDownIcon = () => (
+    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 15v-5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-6.14A2 2 0 0016.28 8H14M6 21h4"></path>
+    </svg>
+  );
+
+  const CopyIcon = () => (
+    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+    </svg>
+  );
 
   return (
-    <div className={`relative break-words flex flex-col`}>
-      {activityForThisBubble && activityForThisBubble.length > 0 && (
-        <div className="mb-3 border-b border-neutral-700 pb-3 text-xs">
-          <ActivityTimeline
-            processedEvents={activityForThisBubble}
-            isLoading={isLiveActivityForThisBubble}
-          />
+    <div className="flex items-start gap-2 sm:gap-4">
+      <img className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" src="https://assets.stickpng.com/images/6294b87c5417451478546b84.png" alt="Аватар на Нела" />
+      <div className="flex flex-col items-start w-full max-w-full sm:max-w-4xl">
+        <span className="font-bold text-sm text-gray-800 mb-1 sm:mb-2">Нела</span>
+        <div className="bg-white text-gray-800 p-3 sm:p-4 rounded-lg w-full">
+          <div className="text-sm sm:text-base leading-relaxed">
+            <ReactMarkdown components={mdComponents}>
+              {typeof message.content === "string"
+                ? message.content
+                : JSON.stringify(message.content)}
+            </ReactMarkdown>
+          </div>
         </div>
-      )}
-      <ReactMarkdown components={mdComponents}>
-        {typeof message.content === "string"
-          ? message.content
-          : JSON.stringify(message.content)}
-      </ReactMarkdown>
-      <Button
-        variant="default"
-        className="cursor-pointer bg-neutral-700 border-neutral-600 text-neutral-300 self-end text-xs sm:text-sm p-1 sm:p-2 h-auto"
-        onClick={() =>
-          handleCopy(
-            typeof message.content === "string"
-              ? message.content
-              : JSON.stringify(message.content),
-            message.id!
-          )
-        }
-      >
-        {copiedMessageId === message.id ? "Copied" : "Copy"}
-        {copiedMessageId === message.id ? <CopyCheck className="h-3 w-3 sm:h-4 sm:w-4 ml-1" /> : <Copy className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />}
-      </Button>
+        <div className="flex items-center gap-3 mt-2">
+          <button className="p-1 hover:bg-gray-200 rounded-full">
+            <ThumbsUpIcon />
+          </button>
+          <button className="p-1 hover:bg-gray-200 rounded-full">
+            <ThumbsDownIcon />
+          </button>
+          <button 
+            className="p-1 hover:bg-gray-200 rounded-full"
+            onClick={() =>
+              handleCopy(
+                typeof message.content === "string"
+                  ? message.content
+                  : JSON.stringify(message.content),
+                message.id!
+              )
+            }
+          >
+            {copiedMessageId === message.id ? <CopyCheck className="w-4 h-4 text-green-500" /> : <CopyIcon />}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
@@ -226,8 +243,6 @@ interface ChatMessagesViewProps {
   scrollAreaRef: React.RefObject<HTMLDivElement | null>;
   onSubmit: (inputValue: string, effort: string, model: string) => void;
   onCancel: () => void;
-  liveActivityEvents: ProcessedEvent[];
-  historicalActivities: Record<string, ProcessedEvent[]>;
 }
 
 export function ChatMessagesView({
@@ -236,8 +251,6 @@ export function ChatMessagesView({
   scrollAreaRef,
   onSubmit,
   onCancel,
-  liveActivityEvents,
-  historicalActivities,
 }: ChatMessagesViewProps) {
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
 
@@ -254,13 +267,13 @@ export function ChatMessagesView({
   return (
     <div className="flex flex-col h-full">
       <ScrollArea className="flex-grow" ref={scrollAreaRef}>
-        <div className="p-3 sm:p-4 md:p-6 space-y-2 w-full mx-auto pt-12 sm:pt-16">
+        <div className="p-2 sm:p-3 md:p-6 space-y-2 sm:space-y-3 w-full mx-auto pt-8 sm:pt-12 md:pt-16">
           {messages.map((message, index) => {
             const isLast = index === messages.length - 1;
             return (
-              <div key={message.id || `msg-${index}`} className="space-y-3">
+              <div key={message.id || `msg-${index}`} className="space-y-2 sm:space-y-3">
                 <div
-                  className={`flex items-start gap-3 ${
+                  className={`flex items-start gap-2 sm:gap-3 ${
                     message.type === "human" ? "justify-end" : ""
                   }`}
                 >
@@ -272,8 +285,6 @@ export function ChatMessagesView({
                   ) : (
                     <AiMessageBubble
                       message={message}
-                      historicalActivity={historicalActivities[message.id!]}
-                      liveActivity={liveActivityEvents} // Pass global live events
                       isLastMessage={isLast}
                       isOverallLoading={isLoading} // Pass global loading state
                       mdComponents={mdComponents}
@@ -288,23 +299,16 @@ export function ChatMessagesView({
           {isLoading &&
             (messages.length === 0 ||
               messages[messages.length - 1].type === "human") && (
-              <div className="flex items-start gap-3 mt-3">
-                {" "}
-                {/* AI message row structure */}
-                <div className="relative group max-w-[90%] sm:max-w-[85%] md:max-w-[80%] rounded-xl p-2 sm:p-3 shadow-sm break-words bg-neutral-800 text-neutral-100 rounded-bl-none w-full min-h-[56px]">
-                  {liveActivityEvents.length > 0 ? (
-                    <div className="text-xs">
-                      <ActivityTimeline
-                        processedEvents={liveActivityEvents}
-                        isLoading={true}
-                      />
+              <div className="flex items-start gap-2 sm:gap-4 mt-3">
+                <img className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" src="https://assets.stickpng.com/images/6294b87c5417451478546b84.png" alt="Аватар на Нела" />
+                <div className="flex flex-col items-start w-full max-w-full sm:max-w-4xl">
+                  <span className="font-bold text-sm text-gray-800 mb-1 sm:mb-2">Нела</span>
+                  <div className="bg-white text-gray-800 p-3 sm:p-4 rounded-lg w-full">
+                    <div className="flex items-center justify-start h-full text-sm sm:text-base">
+                      <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin text-gray-400 mr-2" />
+                      <span>Обработка на прашањето...</span>
                     </div>
-                  ) : (
-                    <div className="flex items-center justify-start h-full">
-                      <Loader2 className="h-5 w-5 animate-spin text-neutral-400 mr-2" />
-                      <span>Processing...</span>
-                    </div>
-                  )}
+                  </div>
                 </div>
               </div>
             )}

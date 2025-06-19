@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { SquarePen, Send, StopCircle } from "lucide-react";
+import { SquarePen, ArrowRight, Paperclip, Mic } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
 
@@ -18,88 +18,83 @@ export const InputForm: React.FC<InputFormProps> = ({
   isLoading,
   hasHistory,
 }) => {
-  const [internalInputValue, setInternalInputValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const [effort] = useState("medium");
   const [model] = useState("gemini-2.5-flash-preview-04-17");
 
-  const handleInternalSubmit = (e?: React.FormEvent) => {
+  const handleInputSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (!internalInputValue.trim()) return;
-    onSubmit(internalInputValue, effort, model);
-    setInternalInputValue("");
+    if (!inputValue.trim()) return;
+    onSubmit(inputValue, effort, model);
+    setInputValue("");
   };
-
-  const handleInternalKeyDown = (
-    e: React.KeyboardEvent<HTMLTextAreaElement>
-  ) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleInternalSubmit();
-    }
-  };
-
-  const isSubmitDisabled = !internalInputValue.trim() || isLoading;
 
   return (
-    <form
-      onSubmit={handleInternalSubmit}
-      className={`flex flex-col gap-2 p-3 `}
-    >
-      <div
-        className={`flex flex-row items-center justify-between text-white rounded-3xl rounded-bl-sm ${
-          hasHistory ? "rounded-br-sm" : ""
-        } break-words min-h-7 bg-neutral-700 px-4 pt-3 `}
-      >
-        <Textarea
-          value={internalInputValue}
-          onChange={(e) => setInternalInputValue(e.target.value)}
-          onKeyDown={handleInternalKeyDown}
-          placeholder="Прашај ме..."
-          className={`w-full text-neutral-100 placeholder-neutral-500 resize-none border-0 focus:outline-none focus:ring-0 outline-none focus-visible:ring-0 shadow-none 
-                        md:text-base  min-h-[56px] max-h-[200px]`}
-          rows={1}
+    <div className="w-full max-w-4xl mx-auto mt-3 sm:mt-4 mb-2 z-10">
+      <div className="relative flex items-center w-full p-1 sm:p-2 bg-gray-100/80 backdrop-blur-sm rounded-full border border-gray-200/80 shadow-lg">
+        <button 
+          type="button"
+          className="p-1.5 sm:p-2 md:p-3 bg-gray-700 text-white rounded-full hover:bg-gray-800 transition-colors"
+        >
+          <Paperclip size={16} className="sm:hidden" />
+          <Paperclip size={18} className="hidden sm:block md:hidden" />
+          <Paperclip size={22} className="hidden md:block" />
+        </button>
+        <input
+          type="text"
+          placeholder="Внесете прашање..."
+          className="flex-grow bg-transparent px-2 sm:px-4 text-sm sm:text-base text-gray-700 placeholder-gray-500 focus:outline-none"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleInputSubmit();
+            }
+          }}
         />
-        <div className="-mt-3">
-          {isLoading ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="text-red-500 hover:text-red-400 hover:bg-red-500/10 p-2 cursor-pointer rounded-full transition-all duration-200"
-              onClick={onCancel}
-            >
-              <StopCircle className="h-5 w-5" />
-            </Button>
-          ) : (
-            <Button
-              type="submit"
-              variant="ghost"
-              className={`${
-                isSubmitDisabled
-                  ? "text-neutral-500"
-                  : "text-blue-500 hover:text-blue-400 hover:bg-blue-500/10"
-              } p-2 cursor-pointer rounded-full transition-all duration-200 text-base`}
-              disabled={isSubmitDisabled}
-            >
-              Search
-              <Send className="h-5 w-5" />
-            </Button>
-          )}
-        </div>
+        <button 
+          type="button"
+          className="p-1.5 sm:p-2 md:p-3 text-gray-600 hover:text-purple-700 transition-colors"
+        >
+          <Mic size={16} className="sm:hidden" />
+          <Mic size={18} className="hidden sm:block md:hidden" />
+          <Mic size={22} className="hidden md:block" />
+        </button>
+        <button 
+          type="button"
+          className="p-1.5 sm:p-2 md:p-3 bg-purple-700 text-white rounded-full hover:bg-purple-800 transition-colors"
+          onClick={handleInputSubmit}
+          disabled={!inputValue.trim() || isLoading}
+        >
+          <ArrowRight size={16} className="sm:hidden" />
+          <ArrowRight size={18} className="hidden sm:block md:hidden" />
+          <ArrowRight size={22} className="hidden md:block" />
+        </button>
       </div>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-
-        {hasHistory && (
+      {isLoading && (
+        <button
+          className="mt-1 sm:mt-2 p-1.5 sm:p-2 bg-red-500/10 text-red-500 rounded-full hover:bg-red-500/20 transition-colors mx-auto block"
+          onClick={onCancel}
+        >
+          Cancel
+        </button>
+      )}
+      {hasHistory && (
+        <div className="flex justify-center mt-1 sm:mt-2">
           <Button
-            className="bg-neutral-700 border-neutral-600 text-neutral-300 cursor-pointer rounded-xl rounded-t-sm pl-2 w-full sm:w-auto mt-1 sm:mt-0"
+            className="bg-gray-200 hover:bg-gray-300 text-gray-700 cursor-pointer rounded-full px-4"
             variant="default"
             onClick={() => window.location.reload()}
           >
-            <SquarePen size={16} className="mr-1" />
-            New Search
+            <SquarePen size={16} className="mr-2" />
+            Ново прашање
           </Button>
-        )}
-      </div>
-    </form>
+        </div>
+      )}
+      <p className="text-xs text-gray-500 text-center mt-1 sm:mt-2">
+        Powered by Remora.
+      </p>
+    </div>
   );
 };

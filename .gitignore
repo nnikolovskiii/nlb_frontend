@@ -1,0 +1,36 @@
+﻿# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+/dist
+/out
+/pack
+
+# misc
+.DS_Store
+.env.local
+.env*.local
+.parcel-cache
+.vite-inspect
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+# pnpm-lock.yaml # Uncomment if you're not using pnpm for package management
+# yarn.lock # Uncomment if you're not using yarn for package management
+# package-lock.json # Uncomment if you're not using npm for package management
+
+# editor directories and files
+.idea
+.vscode
+*.suo
+*.user
+*.userosf
+*.sln
+*.bak
