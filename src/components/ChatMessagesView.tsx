@@ -2,12 +2,14 @@ import type React from "react";
 import type { Message } from "@langchain/langgraph-sdk";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2, Copy, CopyCheck } from "lucide-react";
-import { InputForm } from "@/components/InputForm";
-import { Button } from "@/components/ui/button";
+import nela from '../assets/nela.png';
+
+
 import { useState, ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import nlbLogo from "@/assets/nlb.png";
 
 // Markdown component props type from former ReportView
 type MdComponentProps = {
@@ -141,6 +143,39 @@ const HumanMessageBubble: React.FC<HumanMessageBubbleProps> = ({
   message,
   mdComponents,
 }) => {
+  // Helper function to render message content
+  const renderContent = () => {
+    if (typeof message.content === "string") {
+      return (
+        <ReactMarkdown components={mdComponents}>
+          {message.content}
+        </ReactMarkdown>
+      );
+    } else {
+      // Handle object content (could be image + text or just image)
+      const content = message.content as any;
+      return (
+        <div className="flex flex-col gap-2">
+          {content.image && (
+            <div className="mb-2">
+              <img 
+                src={content.image} 
+                alt="Attached image" 
+                className="max-w-full rounded-lg"
+                style={{ maxHeight: '200px' }}
+              />
+            </div>
+          )}
+          {content.text && (
+            <ReactMarkdown components={mdComponents}>
+              {content.text}
+            </ReactMarkdown>
+          )}
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="flex flex-col items-end max-w-full sm:max-w-2xl">
       <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
@@ -148,11 +183,7 @@ const HumanMessageBubble: React.FC<HumanMessageBubbleProps> = ({
         <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-600 rounded-full flex items-center justify-center text-white text-xs font-bold">Y</div>
       </div>
       <div className="bg-[rgba(40,0,123,0.8)] text-white p-2 sm:p-3 rounded-2xl border border-purple-900 text-sm sm:text-base">
-        <ReactMarkdown components={mdComponents}>
-          {typeof message.content === "string"
-            ? message.content
-            : JSON.stringify(message.content)}
-        </ReactMarkdown>
+        {renderContent()}
       </div>
     </div>
   );
@@ -197,18 +228,65 @@ const AiMessageBubble: React.FC<AiMessageBubbleProps> = ({
     </svg>
   );
 
+  // Helper function to render message content
+  const renderContent = () => {
+    if (typeof message.content === "string") {
+      return (
+        <ReactMarkdown components={mdComponents}>
+          {message.content}
+        </ReactMarkdown>
+      );
+    } else {
+      // Handle object content (could be image + text or just image)
+      const content = message.content as any;
+      return (
+        <div className="flex flex-col gap-2">
+          {content.image && (
+            <div className="mb-2">
+              <img 
+                src={content.image} 
+                alt="Attached image" 
+                className="max-w-full rounded-lg"
+                style={{ maxHeight: '200px' }}
+              />
+            </div>
+          )}
+          {content.text && (
+            <ReactMarkdown components={mdComponents}>
+              {content.text}
+            </ReactMarkdown>
+          )}
+          {!content.image && !content.text && (
+            <ReactMarkdown components={mdComponents}>
+              {JSON.stringify(content)}
+            </ReactMarkdown>
+          )}
+        </div>
+      );
+    }
+  };
+
+  // Get content for copying
+  const getContentForCopy = () => {
+    if (typeof message.content === "string") {
+      return message.content;
+    } else {
+      const content = message.content as any;
+      if (content.text) {
+        return content.text;
+      }
+      return JSON.stringify(message.content);
+    }
+  };
+
   return (
     <div className="flex items-start gap-2 sm:gap-4">
-      <img className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" src="https://assets.stickpng.com/images/6294b87c5417451478546b84.png" alt="Аватар на Нела" />
+      <img className="w-10 h-10 sm:w-14 sm:h-14 rounded-full"src={nela} alt="Nela Logo"/>
       <div className="flex flex-col items-start w-full max-w-full sm:max-w-4xl">
         <span className="font-bold text-sm text-gray-800 mb-1 sm:mb-2">Нела</span>
         <div className="bg-white text-gray-800 p-3 sm:p-4 rounded-lg w-full">
           <div className="text-sm sm:text-base leading-relaxed">
-            <ReactMarkdown components={mdComponents}>
-              {typeof message.content === "string"
-                ? message.content
-                : JSON.stringify(message.content)}
-            </ReactMarkdown>
+            {renderContent()}
           </div>
         </div>
         <div className="flex items-center gap-3 mt-2">
@@ -220,14 +298,7 @@ const AiMessageBubble: React.FC<AiMessageBubbleProps> = ({
           </button>
           <button 
             className="p-1 hover:bg-gray-200 rounded-full"
-            onClick={() =>
-              handleCopy(
-                typeof message.content === "string"
-                  ? message.content
-                  : JSON.stringify(message.content),
-                message.id!
-              )
-            }
+            onClick={() => handleCopy(getContentForCopy(), message.id!)}
           >
             {copiedMessageId === message.id ? <CopyCheck className="w-4 h-4 text-green-500" /> : <CopyIcon />}
           </button>
@@ -314,12 +385,12 @@ export function ChatMessagesView({
             )}
         </div>
       </ScrollArea>
-      <InputForm
+      {/* <InputForm
         onSubmit={onSubmit}
         isLoading={isLoading}
         onCancel={onCancel}
         hasHistory={messages.length > 0}
-      />
+      /> */}
     </div>
   );
 }
