@@ -43,7 +43,6 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ title, description, onC
 
 import { ChatMessagesView } from "@/components/ChatMessagesView.tsx";
 import type { Message } from "@langchain/langgraph-sdk";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 interface WelcomeScreenProps {

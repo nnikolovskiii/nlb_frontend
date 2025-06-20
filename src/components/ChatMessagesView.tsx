@@ -281,7 +281,7 @@ const AiMessageBubble: React.FC<AiMessageBubbleProps> = ({
 
   return (
     <div className="flex items-start gap-2 sm:gap-4">
-      <img className="w-10 h-10 sm:w-14 sm:h-14 rounded-full"src={nela} alt="Nela Logo"/>
+      <img className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" src={nela} alt="Nela Logo"/>
       <div className="flex flex-col items-start w-full max-w-full sm:max-w-4xl">
         <span className="font-bold text-sm text-gray-800 mb-1 sm:mb-2">Нела</span>
         <div className="bg-white text-gray-800 p-3 sm:p-4 rounded-lg w-full">
@@ -371,7 +371,7 @@ export function ChatMessagesView({
             (messages.length === 0 ||
               messages[messages.length - 1].type === "human") && (
               <div className="flex items-start gap-2 sm:gap-4 mt-3">
-                <img className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" src="https://assets.stickpng.com/images/6294b87c5417451478546b84.png" alt="Аватар на Нела" />
+                <img className="w-10 h-10 sm:w-14 sm:h-14 rounded-full"  src={nela} alt="Nela Logo"/>
                 <div className="flex flex-col items-start w-full max-w-full sm:max-w-4xl">
                   <span className="font-bold text-sm text-gray-800 mb-1 sm:mb-2">Нела</span>
                   <div className="bg-white text-gray-800 p-3 sm:p-4 rounded-lg w-full">

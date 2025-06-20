@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { SquarePen, ArrowRight, Paperclip, Mic, X, Square, AlertCircle } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 
 
 // Updated InputFormProps
@@ -245,19 +244,32 @@ export const InputForm: React.FC<InputFormProps> = ({
           <Paperclip size={18} className="hidden sm:block md:hidden" />
           <Paperclip size={22} className="hidden md:block" />
         </button>
-        <input
-          type="text"
-          placeholder="Внесете прашање..."
-          className="flex-grow bg-transparent px-2 sm:px-4 text-sm sm:text-base text-gray-700 placeholder-gray-500 focus:outline-none"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleInputSubmit();
-            }
-          }}
-        />
+        <div className="flex-grow relative flex items-center">
+          <input
+            type="text"
+            placeholder="Внесете прашање..."
+            className="w-full bg-transparent px-2 sm:px-4 text-sm sm:text-base text-gray-700 placeholder-gray-500 focus:outline-none"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleInputSubmit();
+              }
+            }}
+          />
+          {isLoading && (
+            <button
+              type="button"
+              className="absolute right-1 p-1 sm:p-1.5 bg-red-500/10 text-red-500 rounded-full hover:bg-red-500/20 transition-colors"
+              onClick={onCancel}
+            >
+              <X size={14} className="sm:hidden" />
+              <X size={16} className="hidden sm:block md:hidden" />
+              <X size={18} className="hidden md:block" />
+            </button>
+          )}
+        </div>
         <button 
           type="button"
           className={`p-1.5 sm:p-2 md:p-3 transition-colors ${
@@ -318,14 +330,6 @@ export const InputForm: React.FC<InputFormProps> = ({
           <ArrowRight size={22} className="hidden md:block" />
         </button>
       </div>
-      {isLoading && (
-        <button
-          className="mt-1 sm:mt-2 p-1.5 sm:p-2 bg-red-500/10 text-red-500 rounded-full hover:bg-red-500/20 transition-colors mx-auto block"
-          onClick={onCancel}
-        >
-          Cancel
-        </button>
-      )}
       {hasHistory && (
         <div className="flex justify-center mt-1 sm:mt-2">
           <Button

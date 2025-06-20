@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useStream } from "@langchain/langgraph-sdk/react";
 import type { Message } from "@langchain/langgraph-sdk";
 import { WelcomeScreen } from "@/components/WelcomeScreen.tsx";
-import { ChatMessagesView } from "@/components/ChatMessagesView.tsx";
+
+import mascotNLB from '/src/assets/mascot.png';
 
 // SVG Icon for the password visibility toggle
 const EyeIcon = ({ className }: { className?: string }) => (
@@ -23,9 +24,9 @@ const EyeOffIcon = ({ className }: { className?: string }) => (
 // NLB Banka Logo SVG
 const NlbLogo = ({ className, textColor = "black" }: { className?: string; textColor?: string }) => (
     <svg className={className} viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-        <text x="10" y="45" fontFamily="Arial, sans-serif" fontSize="40" fontWeight="bold" fill={textColor}>
-            <tspan fill="#4A00E0">NLB</tspan>
-            <tspan> Banka</tspan>
+        <text x="10" y="45" fontFamily="Poppins, sans-serif" fontSize="40" fontWeight="bold" fill={textColor}>
+            <tspan >NLB Banka</tspan>
+            <tspan> </tspan>
         </text>
     </svg>
 );
@@ -111,15 +112,14 @@ const LoginForm = ({ onLogin }: { onLogin: () => void }) => {
           </div>
 
           {/* Right Side: Branding & Image */}
-          <div className="w-full md:w-1/2 bg-gradient-to-br from-[#4A00E0] to-[#8E2DE2] p-8 sm:p-12 flex flex-col items-center justify-center text-center text-white rounded-l-none md:rounded-l-2xl">
+          <div className="w-full md:w-1/2 bg-gradient-to-br from-[#4A00E0] to-[#4A00E0] p-8 sm:p-12 flex flex-col items-center justify-center text-center text-white rounded-l-none md:rounded-l-2xl">
               <div className="flex flex-col items-center justify-center h-full">
                   <NlbLogo className="h-16 mb-4" textColor="white" />
                   <p className="text-3xl tracking-tight leading-tight">
                       Вашиот дигитален банкар <span className="font-bold">24/7</span>
                   </p>
-                  <img 
-                      src="https://raw.githubusercontent.com/gist/replicate/e69c8842b1f13b1c676991901844a4e1/raw/10c3d256420556555af55207c4270d10d1822851/nlb-mascot.png"
-                      alt="NLB Banka Mascot" 
+                  <img
+                      src={mascotNLB} alt="NLB Mascot"
                       className="w-full max-w-sm mt-8"
                       onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/400x480/ffffff/cccccc?text=Mascot'; }}
                   />
