@@ -2,7 +2,7 @@ import type React from "react";
 import type { Message } from "@langchain/langgraph-sdk";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2, Copy, CopyCheck } from "lucide-react";
-import nela from '../assets/nela.png';
+import nela from '../assets/ikoIcon.png';
 
 
 import { useState, ReactNode } from "react";
@@ -283,7 +283,7 @@ const AiMessageBubble: React.FC<AiMessageBubbleProps> = ({
     <div className="flex items-start gap-2 sm:gap-4">
       <img className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" src={nela} alt="Nela Logo"/>
       <div className="flex flex-col items-start w-full max-w-full sm:max-w-4xl">
-        <span className="font-bold text-sm text-gray-800 mb-1 sm:mb-2">Нела</span>
+        <span className="font-bold text-sm text-gray-800 mb-1 sm:mb-2">Ико</span>
         <div className="bg-white text-gray-800 p-3 sm:p-4 rounded-lg w-full">
           <div className="text-sm sm:text-base leading-relaxed">
             {renderContent()}
@@ -373,7 +373,7 @@ export function ChatMessagesView({
               <div className="flex items-start gap-2 sm:gap-4 mt-3">
                 <img className="w-10 h-10 sm:w-14 sm:h-14 rounded-full"  src={nela} alt="Nela Logo"/>
                 <div className="flex flex-col items-start w-full max-w-full sm:max-w-4xl">
-                  <span className="font-bold text-sm text-gray-800 mb-1 sm:mb-2">Нела</span>
+                  <span className="font-bold text-sm text-gray-800 mb-1 sm:mb-2">Ико</span>
                   <div className="bg-white text-gray-800 p-3 sm:p-4 rounded-lg w-full">
                     <div className="flex items-center justify-start h-full text-sm sm:text-base">
                       <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin text-gray-400 mr-2" />

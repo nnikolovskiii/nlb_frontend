@@ -300,7 +300,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                     <IconWrapper className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-indigo-950 rounded-full text-white overflow-hidden">
                         <img src={nlbLogo} alt="NLB Logo" className="w-full h-full object-cover" />
                     </IconWrapper>
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-medium text-gray-900 hidden sm:block">Нела</h1>
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-medium text-gray-900 hidden sm:block">Ико</h1>
                 </div>
 
                 {/* Custom Segmented Control */}

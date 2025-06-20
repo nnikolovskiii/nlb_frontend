@@ -3,7 +3,7 @@ import { useStream } from "@langchain/langgraph-sdk/react";
 import type { Message } from "@langchain/langgraph-sdk";
 import { WelcomeScreen } from "@/components/WelcomeScreen.tsx";
 
-import mascotNLB from '/src/assets/mascot.png';
+import mascotNLB from '/src/assets/iko.png';
 
 // SVG Icon for the password visibility toggle
 const EyeIcon = ({ className }: { className?: string }) => (
